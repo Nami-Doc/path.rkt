@@ -2,7 +2,9 @@
 ;; config
 (define +from-file+ "path.txt")
 (define +dest-file+ "path_gen.txt")
-(define +path-sep+ ";")
+(define +path-sep+ (case system-type
+  ['windows ";"]
+  [else ":"])) ; linux/mac
 
 ;; holder
 (define *folders-to-add* (make-parameter '()))
@@ -20,14 +22,16 @@
 ;; main program
 (define (compile from to line-sep folders-to-add)
   (ensure-file-exists from)
-  (display (string-append "Compiling " from " to " to))
 
   (define lines (append
                   (split-newlines (file->string from))
                   (*folders-to-add*)))
   
-  (display-lines-to-file lines from #:separator "\n" #:exists 'replace) ; overwrite original
-  (display-lines-to-file lines to #:separator line-sep #:exists 'replace))
+  (display-lines-to-file lines from
+    #:separator "\n" #:exists 'replace) ; overwrite original
+  (display (string-append "Compiling " from " to " to))
+  (display-lines-to-file lines to
+    #:separator line-sep #:exists 'replace))
 
 ;; cli interface
 (command-line
