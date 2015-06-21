@@ -33,7 +33,7 @@
   (display-lines-to-file lines to
     #:separator line-sep #:exists 'replace))
 
-;; cli interface
+;; cli
 (command-line
   #:program "Path"
   #:multi
